@@ -138,8 +138,8 @@ function LoginController (Account) {
   };
 }
 
-SignupController.$inject = []; // minification protection
-function SignupController () {
+SignupController.$inject = ["Account"]; // minification protection
+function SignupController (Account) {
   var vm = this;
   vm.new_user = {}; // clear form data
 
@@ -148,6 +148,8 @@ function SignupController () {
       .signup(vm.new_user)
       .then(
         function (response) {
+          vm.new_user = {};
+        $location.path("/profile");
           // TODO #9: clear sign up form
           // TODO #10: redirect to '/profile'
         }
@@ -191,6 +193,10 @@ function Account($http, $q, $auth) {
   self.updateProfile = updateProfile;
 
   function signup(userData) {
+    $auth.signup(userData)
+    .then(function(response){
+      $location.path("/profile");
+    });
     // TODO #8: signup (https://github.com/sahat/satellizer#authsignupuser-options)
     // then, set the token (https://github.com/sahat/satellizer#authsettokentoken)
     // returns a promise
